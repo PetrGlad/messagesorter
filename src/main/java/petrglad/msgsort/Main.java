@@ -20,6 +20,9 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import static petrglad.msgsort.MessageSender.getMessageSender;
+import static petrglad.msgsort.MessageSender.getMessageURIFunction;
+
 public class Main {
 
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
@@ -54,32 +57,21 @@ public class Main {
         final ArgumentParser parser = makeCommandLineParser();
         try {
             final Namespace ns = parser.parseArgs(args);
-
             final Integer windowLength = ns.getInt(BUFFER_OPT);
-            final int maxWindow = windowLength * 2;
-            final BlockingQueue<Message> queue = new PriorityBlockingQueue<>(
-                    maxWindow, (a, b) -> a.timestamp.compareTo(b.timestamp));
-
             final String destUri = ns.getString(DEST_OPT);
-            final Consumer<Message> monotonic = new MonotonicRestriction();
-            final Consumer<? super Message> sender =
-                    MessageSender.getMessageSender(MessageSender.getMessageURIFunction(destUri));
 
-            // TODO Ensure that all received messages are sent before shutting down
+            final Processor processor = new Processor(
+                    windowLength,
+                    getMessageSender(getMessageURIFunction(destUri)));
+            addShutdownHook(processor::shutdown);
+
             final ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
-            exec.scheduleAtFixedRate(() -> {
-                        final Collection<Message> messages = new ArrayList<>(windowLength);
-                        // XXX If client stops sending messages then last windowLength messages may stuck in the queue indefinitely.
-                        queue.drainTo(messages, Math.max(0, queue.size() - windowLength));
-                        messages.forEach(monotonic.andThen(sender));
-                    },
-                    4, 1, TimeUnit.SECONDS);
+            exec.scheduleAtFixedRate(processor::run, 4, 1, TimeUnit.SECONDS);
             addShutdownHook(exec::shutdown);
 
             final Supplier<ChannelHandler[]> handlersSupplier = () -> new ChannelHandler[]{
                     new LineBasedFrameDecoder(256, true, true),
-                    new MessageParser(queue::add)};
-
+                    new MessageParser(processor::add)};
             for (Object port : ns.getList(PORT_OPT)) {
                 startNettyServer(handlersSupplier, (Integer)port);
             }
