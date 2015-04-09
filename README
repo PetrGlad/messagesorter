@@ -25,6 +25,7 @@ First requires using timeouts and shorter queue second requires longer queue.
 
 * Extract testing facilities into separate module. These bring unnecessary code and dependencies into resulting JAR.
 
+* Detect buffer overflow situation
 
 
 

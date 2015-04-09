@@ -6,12 +6,16 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.eclipse.jetty.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.URI;
 
 public class AhcHttpClient implements Closeable {
+
+    private static final Logger LOG = LoggerFactory.getLogger(AhcHttpClient.class);
 
     private final CloseableHttpClient httpclient = HttpClients.createDefault();
 
@@ -28,11 +32,19 @@ public class AhcHttpClient implements Closeable {
         public boolean isSuccessful() {
             return statusCode == HttpStatus.OK_200;
         }
+
+        @Override
+        public String toString() {
+            return "TextResult{" +
+                    "statusCode=" + statusCode +
+                    ", body='" + body + '\'' +
+                    '}';
+        }
     }
 
     public TextResult get(URI uri) {
         try {
-            System.out.println("HTTP Client GET " + uri); // TODO Add logger
+            LOG.debug("HTTP GET {}", uri);
 
             // To speed this up we can ensure connection to server has 'keep-alive' header
             try (CloseableHttpResponse response = httpclient.execute(new HttpGet(uri))) {

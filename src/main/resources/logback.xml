@@ -1,0 +1,17 @@
+<configuration scan="true">
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d [%thread] %level %logger - %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="${root-level:-DEBUG}">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+    <!--<logger name="org.apache.http.wire" level="TRACE" />-->
+    <logger name="org.apache.http" level="INFO" />
+
+    <!-- Jetty is dependency of Spark -->
+    <logger name="org.eclipse.jetty" level="INFO" />
+</configuration>
