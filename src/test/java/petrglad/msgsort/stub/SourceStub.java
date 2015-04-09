@@ -19,8 +19,9 @@ public class SourceStub {
         while (true) {
             Integer port = getPort.get();
             try {
-                // TODO Randomize messages order
-                final String message = Messages.formatMessage(LocalDateTime.now(), randValue.nextInt());
+                final String message = Messages.formatMessage(
+                        LocalDateTime.now().plusSeconds(randValue.nextInt(21) - 10),
+                        randValue.nextInt());
                 try (Socket s = new Socket("127.0.0.1", port)) {
                     s.getOutputStream().write(message.getBytes(StandardCharsets.UTF_8));
                 }
@@ -29,7 +30,7 @@ public class SourceStub {
                 System.err.println("FAIL " + port + ": " + e.getMessage());
             }
             try {
-                Thread.sleep(randDelay.nextInt(1500));
+                Thread.sleep(500 + randDelay.nextInt(1000));
             } catch (InterruptedException e) {
             }
         }
