@@ -1,11 +1,12 @@
 package petrglad.msgsort.stub;
 
+import petrglad.msgsort.Messages;
+
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Random;
 import java.util.function.Supplier;
 
@@ -19,7 +20,7 @@ public class SourceStub {
             Integer port = getPort.get();
             try {
                 // TODO Randomize messages order
-                final String message = formatMessage(LocalDateTime.now(), randValue.nextInt());
+                final String message = Messages.formatMessage(LocalDateTime.now(), randValue.nextInt());
                 try (Socket s = new Socket("127.0.0.1", port)) {
                     s.getOutputStream().write(message.getBytes(StandardCharsets.UTF_8));
                 }
@@ -38,9 +39,5 @@ public class SourceStub {
         int[] ports = new int[]{9100, 9101};
         Random randPort = new Random();
         return () -> ports[randPort.nextInt(ports.length)];
-    }
-
-    private static String formatMessage(LocalDateTime timestamp, long value) {
-        return timestamp.format(DateTimeFormatter.ISO_DATE_TIME) + ";" + value + "\n";
     }
 }

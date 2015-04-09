@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter;
 /**
  * Message processing utils
  */
-public class Message {
+public class Message    {
     final LocalDateTime timestamp;
     final long value;
 
