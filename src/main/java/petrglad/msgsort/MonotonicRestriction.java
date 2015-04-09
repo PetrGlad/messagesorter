@@ -11,9 +11,7 @@ import java.util.function.Consumer;
 public class MonotonicRestriction implements Consumer<Message> {
 
     private static final Logger LOG = LoggerFactory.getLogger(MonotonicRestriction.class);
-
-    private final AtomicReference<LocalDateTime> boundary =
-            new AtomicReference<>(LocalDateTime.now().minusYears(1));
+    private final AtomicReference<LocalDateTime> boundary = new AtomicReference<>(LocalDateTime.MIN);
 
     @Override
     public void accept(Message message) {
