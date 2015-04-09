@@ -1,0 +1,33 @@
+
+    TODO/Issues
+
+* Randomize messages ordering in source stub
+
+* Ensure that all received messages are sent before shutting down.
+First start rejecting incoming messages (shutdown HTTP server) then drain reordering buffer.
+
+* Output message ordering does not guarantee that messages are processed in same order.
+That is not unless receiving server is explicitly crafted to handle messages this way. Any standard server may
+receive/process messages in different threads or handlers which would require tricky synchronization.
+If one wants to ensure output messages ordering then they should be given serial numbers or sort messages again
+on receiving side. In latter case there is no point in sorting them inside this proxy at all.
+
+* Using HTTP GET for data update is abuse of HTTP. In particular it won't communicate well through proxies.
+One should change method to POST, PUT or UPDATE whichever is appropriate.
+
+* Current logic does not handle well case when client stops sending messages or just makes long pause.
+In that case last messages in reordering queue will not be sent.
+
+* Generally reducing messages processing delay and getting correct messages order are contradictory.
+First requires using timeouts and shorter queue second requires longer queue.
+
+* Decide what to do when sending message to destination fails (retry or discard)
+
+* Extract testing facilities into separate module. These bring unnecessary code and dependencies into resulting JAR.
+
+
+
+
+
+
+
