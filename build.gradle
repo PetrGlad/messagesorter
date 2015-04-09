@@ -1,0 +1,25 @@
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+version = '0.1'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'io.netty:netty-all:4.0.27.Final'
+    compile 'net.sourceforge.argparse4j:argparse4j:0.5.0'
+    compile 'org.apache.httpcomponents:httpclient:4.4.1'
+
+    // TODO Testing facilities should be in separate module
+    compile 'com.sparkjava:spark-core:2.1'
+}
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Timestamped message sorting proxy.',
+                   'Implementation-Version': version,
+                   'Main-Class': 'petrglad.msgsort.Main'
+    }
+}
