@@ -15,7 +15,7 @@ public class Processor {
         assert windowLength >= 0;
         this.windowLength = windowLength;
         queue = new PriorityBlockingQueue<>(
-                windowLength * 2,
+                windowLength * 3,
                 (a, b) -> a.timestamp.compareTo(b.timestamp));
         this.sender = new MonotonicRestriction().andThen(sender);
     }

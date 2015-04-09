@@ -1,10 +1,8 @@
 package petrglad.msgsort;
 
 
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandler;
 import io.netty.handler.codec.LineBasedFrameDecoder;
-import io.netty.util.concurrent.*;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
@@ -12,12 +10,8 @@ import net.sourceforge.argparse4j.inf.Namespace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.concurrent.*;
-import java.util.concurrent.Future;
-import java.util.function.Consumer;
-import java.util.function.Function;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 import static petrglad.msgsort.MessageSender.getMessageSender;
@@ -51,7 +45,6 @@ public class Main {
                 .setDefault(10);
         return parser;
     }
-
 
     public static void main(String[] args) {
         final ArgumentParser parser = makeCommandLineParser();

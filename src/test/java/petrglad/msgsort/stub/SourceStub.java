@@ -10,6 +10,9 @@ import java.time.LocalDateTime;
 import java.util.Random;
 import java.util.function.Supplier;
 
+/**
+ * Testing helper: simulates incoming messages source
+ */
 public class SourceStub {
     public static void main(String[] args) throws IOException {
         Random randValue = new Random();
