@@ -1,6 +1,5 @@
 package petrglad.msgsort;
 
-
 import io.netty.channel.ChannelHandler;
 import io.netty.handler.codec.LineBasedFrameDecoder;
 import net.sourceforge.argparse4j.ArgumentParsers;
@@ -10,8 +9,6 @@ import net.sourceforge.argparse4j.inf.Namespace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 import static petrglad.msgsort.MessageSender.getMessageSender;
@@ -38,7 +35,7 @@ public class Main {
                 .required(true)
                 .help("Target HTTP URL to post resulting messages.")
                         // XXX Hardcoded for convenience to match one in petrglad.msgsort.stub.DestinationStub
-                .setDefault("http://localhost:9200/incoming");
+                .setDefault("http://localhost:9200/incoming?timestamp=" + MessageSender.VALUE_PLACE + "&value=" + MessageSender.VALUE_PLACE);
         parser.addArgument("-b", "--" + BUFFER_OPT)
                 .help("Defines max number of messages to accumulate in reorder buffer.")
                 .type(Integer.class)
@@ -66,7 +63,7 @@ public class Main {
                     new LineBasedFrameDecoder(256, true, true),
                     new MessageParser(processor::add)};
             for (Object port : ns.getList(PORT_OPT)) {
-                startNettyServer(handlersSupplier, (Integer)port);
+                startNettyServer(handlersSupplier, (Integer) port);
             }
 
             Object wait = new Object();

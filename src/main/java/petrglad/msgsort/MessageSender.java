@@ -1,6 +1,5 @@
 package petrglad.msgsort;
 
-import org.apache.http.client.utils.URIBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,6 +11,8 @@ import java.util.function.Function;
 
 public class MessageSender {
     private static final Logger LOG = LoggerFactory.getLogger(MessageSender.class);
+    public static final String VALUE_PLACE = "{value}";
+    public static final String TIMESTAMP_PLACE = "{timestamp}";
 
     static Consumer<? super Message> getMessageSender(Function<Message, URI> makeUri) {
         return m -> {
@@ -28,16 +29,16 @@ public class MessageSender {
         };
     }
 
-    static Function<Message, URI> getMessageURIFunction(String destUri) {
+    static Function<Message, URI> getMessageURIFunction(String destUriFormat) {
+        String formatStr = destUriFormat.replace("%", "%%").replace(TIMESTAMP_PLACE, "%1s").replace(VALUE_PLACE, "%2s");
         return m -> {
             try {
-                URIBuilder ub = new URIBuilder(destUri);
-                ub.addParameter("timestamp", Messages.formatTimestamp(m.timestamp));
-                ub.addParameter("value", Long.toString(m.value));
-                return ub.build();
+                return new URI(String.format(formatStr,
+                        Messages.formatTimestamp(m.timestamp),
+                        Long.toString(m.value)));
             } catch (URISyntaxException e) {
                 throw new RuntimeException(
-                        "Destination URI '" + destUri + "' is incorrect for message '" + m + "'",
+                        "Destination URI '" + destUriFormat + "' is incorrect for message '" + m + "'",
                         e);
             }
         };
