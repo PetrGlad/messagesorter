@@ -58,9 +58,9 @@ public class Main {
                     getMessageSender(getMessageURIFunction(destUri)));
             addShutdownHook(processor::shutdown);
 
-            final ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
-            exec.scheduleAtFixedRate(processor::run, 4, 1, TimeUnit.SECONDS);
-            addShutdownHook(exec::shutdown);
+            final Spooler spooler = new Spooler(processor::run, 900);
+            spooler.start();
+            addShutdownHook(spooler::shutdown);
 
             final Supplier<ChannelHandler[]> handlersSupplier = () -> new ChannelHandler[]{
                     new LineBasedFrameDecoder(256, true, true),
