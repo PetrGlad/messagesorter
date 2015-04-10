@@ -6,6 +6,9 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.function.Consumer;
 
+/**
+ * Orders incoming messages. When run() is invoked sends oldest messages to destination.
+ */
 public class Processor {
     private final BlockingQueue<Message> queue;
     private final Consumer<? super Message> sender;
@@ -20,6 +23,10 @@ public class Processor {
         this.sender = new MonotonicRestriction().andThen(sender);
     }
 
+    public void add(Message m) {
+        queue.add(m);
+    }
+
     private void sendPendingMessages(int windowLength) {
         final Collection<Message> messages = new ArrayList<>(this.windowLength * 2);
         // XXX If client stops sending messages then last windowLength messages may stuck in the queue indefinitely.
@@ -29,10 +36,6 @@ public class Processor {
 
     public void run() {
         sendPendingMessages(windowLength);
-    }
-
-    public void add(Message m) {
-        queue.add(m);
     }
 
     public void shutdown() {

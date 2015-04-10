@@ -19,7 +19,7 @@ public class MonotonicRestriction implements Consumer<Message> {
     }
 
     /**
-     * Invokes 'after' only if message's timestamp is not behind boundary (not in past).
+     * Invokes 'after' only if message's timestamp is not behind boundary (is not in past).
      */
     @Override
     public Consumer<Message> andThen(Consumer<? super Message> after) {
