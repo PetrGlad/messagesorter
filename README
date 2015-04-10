@@ -12,7 +12,7 @@ To get help on command line options run
 
 To run example configuration
     gradle integrationTestJars
-    ./run.sh build/libs/
+    ./run.sh
 
 
     ISSUES
@@ -34,9 +34,3 @@ In that case last messages in reordering queue will not be sent.
 * Extract testing facilities into separate module. These bring unnecessary code and dependencies into resulting JAR.
 
 * Detect buffer overflow situation
-
-
-
-
-
-
