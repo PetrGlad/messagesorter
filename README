@@ -1,10 +1,21 @@
 
-    TODO/Issues
+    BUILD AND RUN
 
-* Randomize messages ordering in source stub
+Build distribution in ./build/install/messagesorter
+    gradle installDist
+Generated start scripts are placed in in ./build/install/messagesorter/bin/
+To make distribution zip
+    gradle distZip
 
-* Ensure that all received messages are sent before shutting down.
-First start rejecting incoming messages (shutdown HTTP server) then drain reordering buffer.
+To get help on command line options run
+    messagesorter --help
+
+To run example configuration
+    gradle integrationTestJars
+    ./run.sh build/libs/
+
+
+    ISSUES
 
 * Output message ordering does not guarantee that messages are processed in same order.
 That is not unless receiving server is explicitly crafted to handle messages this way. Any standard server may
@@ -17,9 +28,6 @@ One should change method to POST, PUT or UPDATE whichever is appropriate.
 
 * Current logic does not handle well case when client stops sending messages or just makes long pause.
 In that case last messages in reordering queue will not be sent.
-
-* Generally reducing messages processing delay and getting correct messages order are contradictory.
-First requires using timeouts and shorter queue second requires longer queue.
 
 * Decide what to do when sending message to destination fails (retry or discard)
 
