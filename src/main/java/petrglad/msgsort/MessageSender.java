@@ -30,7 +30,9 @@ public class MessageSender {
     }
 
     static Function<Message, URI> getMessageURIFunction(String destUriFormat) {
-        String formatStr = destUriFormat.replace("%", "%%").replace(TIMESTAMP_PLACE, "%1s").replace(VALUE_PLACE, "%2s");
+        String formatStr = destUriFormat.replace("%", "%%")
+                .replace(TIMESTAMP_PLACE, "%1s")
+                .replace(VALUE_PLACE, "%2s");
         return m -> {
             try {
                 return new URI(String.format(formatStr,

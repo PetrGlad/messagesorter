@@ -11,8 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.function.Supplier;
 
-import static petrglad.msgsort.MessageSender.getMessageSender;
-import static petrglad.msgsort.MessageSender.getMessageURIFunction;
+import static petrglad.msgsort.MessageSender.*;
 
 public class Main {
 
@@ -33,9 +32,9 @@ public class Main {
                 .help("Ports to listen for incoming messages.");
         parser.addArgument("-t", "--" + DEST_OPT)
                 .required(true)
-                .help("Target HTTP URL to post resulting messages.")
+                .help("Target HTTP URL template to post resulting messages. " + TIMESTAMP_PLACE + " and " + VALUE_PLACE + " are placeholders.")
                         // XXX Hardcoded for convenience to match one in petrglad.msgsort.stub.DestinationStub
-                .setDefault("http://localhost:9200/incoming?timestamp=" + MessageSender.VALUE_PLACE + "&value=" + MessageSender.VALUE_PLACE);
+                .setDefault("http://localhost:9200/incoming?timestamp=" + TIMESTAMP_PLACE + "&value=" + VALUE_PLACE);
         parser.addArgument("-b", "--" + BUFFER_OPT)
                 .help("Defines max number of messages to accumulate in reorder buffer.")
                 .type(Integer.class)
