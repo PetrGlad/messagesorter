@@ -53,7 +53,7 @@ public class AhcHttpClient implements Closeable {
                         EntityUtils.toString(response.getEntity()));
             }
         } catch (IOException e) {
-            throw new RuntimeException();
+            throw new RuntimeException(e);
         }
     }
 
